@@ -1,12 +1,15 @@
 spring:
   application:
-    name: products-service
+    name: eureka-sv
   cloud:
     config:
-      uri: http://localhost:8081 
-      fail-fast: true 
+      fail-fast: true
       retry:
         initial-interval: 1000
         max-interval: 2000
         multiplier: 1.5
-        max-attempts: 3
+        max-attempts: 6
+  config:
+    import: configserver:http://localhost:8081
+
+
