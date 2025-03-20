@@ -16,7 +16,7 @@ public class ShoppingCartMapper {
                 shoppingCart.getId(),
                 shoppingCart.getFullPrice(),
                 shoppingCart.getStatus(),
-                shoppingCartDetailMapper.detailListToResponseDTO(shoppingCart.getId()) );
+                shoppingCartDetailMapper.detailListToResponseDTO(shoppingCart.getId()));
     }
 
 }

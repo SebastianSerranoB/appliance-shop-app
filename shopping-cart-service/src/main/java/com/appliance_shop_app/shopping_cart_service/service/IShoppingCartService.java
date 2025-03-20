@@ -10,7 +10,7 @@ public interface IShoppingCartService {
 
     public List<ShoppingCartResponseDTO> getAllCarts();
 
-    public ShoppingCartProductResponseDTO findCartById(Long id);
+    public ShoppingCartResponseDTO findCartById(Long id);
 
     public Long createCartAndGetId();
 
@@ -18,7 +18,7 @@ public interface IShoppingCartService {
 
     public void checkoutCart(Long id);
 
-    public void deleteCartProductById(Long id);
+    public void deleteCartProductById(Long cartId, Long productId);
 
     public void deleteCartById(Long id);
 }

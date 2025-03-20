@@ -57,6 +57,14 @@ public class ShoppingCartValidator {
         }
     }
 
+
+    public void validateAddProduct(Long cartId, Long productId){
+        this.validateCart(cartId, Status.ACTIVE.toString());
+        this.validateProduct(productId,Status.ACTIVE.toString());
+    }
+
+
+
     public ProductDTO fallback(Long productId, Throwable t) {
         throw new BusinessException("Products-service is unavailable.");
     }
