@@ -3,7 +3,6 @@ package com.appliance_shop_app.shopping_cart_service.service;
 import com.appliance_shop_app.shopping_cart_service.api.IProductAPI;
 import com.appliance_shop_app.shopping_cart_service.dto.AddProductDTO;
 import com.appliance_shop_app.shopping_cart_service.dto.ShoppingCartResponseDTO;
-import com.appliance_shop_app.shopping_cart_service.exception.BusinessException;
 import com.appliance_shop_app.shopping_cart_service.exception.NotFoundException;
 import com.appliance_shop_app.shopping_cart_service.mapper.ShoppingCartDetailMapper;
 import com.appliance_shop_app.shopping_cart_service.mapper.ShoppingCartMapper;
@@ -13,7 +12,6 @@ import com.appliance_shop_app.shopping_cart_service.model.enums.Status;
 import com.appliance_shop_app.shopping_cart_service.repository.IShoppingCartDetailRepository;
 import com.appliance_shop_app.shopping_cart_service.repository.IShoppingCartRepository;
 import com.appliance_shop_app.shopping_cart_service.service.validator.ShoppingCartValidator;
-import com.netflix.discovery.converters.Auto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -49,9 +47,8 @@ public class ShoppingCartService implements IShoppingCartService {
     }
 
     @Override
-    public ShoppingCartResponseDTO findCartById(Long id) {
-        return this.shoppingCartMapper.toResponseDTO(this.shoppingCartRepository.findById(id)
-                                                                                .orElseThrow(() -> new NotFoundException("Cart with ID: " + id + " not found.")));
+    public ShoppingCartResponseDTO findCartByIdResponse(Long id) {
+        return this.shoppingCartMapper.toResponseDTO(this.findCartById(id));
     }
 
     @Override
@@ -88,20 +85,47 @@ public class ShoppingCartService implements IShoppingCartService {
 
     @Override
     public void checkoutCart(Long id) {
-        //validate checkout, must habe products, cart exists, correct sate
-        //change to checkedout state
+        this.shoppingCartValidator.validateCheckoutCart(id);
+        ShoppingCart cart = this.findCartById(id);
+        cart.setStatus(Status.CHECKED_OUT);
+        this.shoppingCartRepository.save(cart);
     }
 
 
     @Override
     public void deleteCartProductById(Long cartId, Long productId) {
-        //validate cart exists and it is active, check for product in cart, delete, recalculate full price.
+        this.shoppingCartValidator.validateDeleteProduct(cartId, productId);
+        this.deleteCartProduct(cartId, productId);
+        this.calculateCartFullPrice(cartId);
     }
+
+
+    public void deleteCartProduct(Long cartId, Long productId){
+        List<ShoppingCartDetail> detailList = this.shoppingCartDetailRepository.findShoppingCartDetailListById(cartId);
+
+        for(ShoppingCartDetail detail : detailList){
+            if(detail.getProductId().equals(productId)){
+                this.shoppingCartDetailRepository.delete(detail);
+            }
+        }
+    }
+
+
+
 
     @Override
     public void deleteCartById(Long id) {
-        //validate it exists and it is not completed, change state to deleted or something like that, logic delete
+        this.shoppingCartValidator.validateDeleteCart(id);
+        ShoppingCart cart = this.findCartById(id);
+        cart.setStatus(Status.DELETED);
+        this.shoppingCartRepository.save(cart);
     }
+
+
+    public ShoppingCart findCartById(Long id){
+        return this.shoppingCartRepository.findById(id).orElseThrow( () -> new NotFoundException("Cart with ID: " + id + " not found,"));
+    }
+
 
     public void calculateCartFullPrice(Long cartId){
         List<ShoppingCartDetail> detailList = this.shoppingCartDetailRepository.findShoppingCartDetailListById(cartId);

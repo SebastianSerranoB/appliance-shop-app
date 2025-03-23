@@ -2,7 +2,6 @@ package com.appliance_shop_app.shopping_cart_service.controller;
 
 import com.appliance_shop_app.shopping_cart_service.dto.AddProductDTO;
 import com.appliance_shop_app.shopping_cart_service.dto.ShoppingCartResponseDTO;
-import com.appliance_shop_app.shopping_cart_service.model.ShoppingCart;
 import com.appliance_shop_app.shopping_cart_service.service.IShoppingCartService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,63 +19,55 @@ public class ShoppingCartController {
     @Autowired
     private IShoppingCartService shoppingCartService;
 
-/*
-    //Create a new shopping cart.
-    @GetMapping("/create")
-    public ResponseEntity<String> createShoppingCart() {
 
-        return ResponseEntity.ok();
+
+    @GetMapping("/createAndGetID")
+    public ResponseEntity<String> createShoppingCartAndReturnId() {
+        return ResponseEntity.ok("Shopping cart created successfully. Access ID: " +  shoppingCartService.createCartAndGetId());
     }
 
-    @GetMapping("/getAll")
+    @GetMapping("/getAllCartsAndDetails")
     public ResponseEntity<List<ShoppingCartResponseDTO>> getAllCarts() {
-        return ResponseEntity.ok(productService.getAllProducts());
+        return ResponseEntity.ok(shoppingCartService.getAllCarts());
     }
 
-
-    //response a dto, with list of detail
     @GetMapping("/findOne/{id}")
     public ResponseEntity<ShoppingCartResponseDTO> findOne(@PathVariable Long id) {
-        return ResponseEntity.ok(productService.findProductById(id));
+        return ResponseEntity.ok(shoppingCartService.findCartByIdResponse(id);
     }
 
     //PUT	/carts/{cartId}/products	Add or update a product in the shopping cart.
     @PutMapping("/add-product")
-    public ResponseEntity<?> editProduct(@Valid @RequestBody AddProductDTO product, BindingResult bindingResult)
-    {
+    public ResponseEntity<?> editProduct(@Valid @RequestBody AddProductDTO product, BindingResult bindingResult) {
         if(bindingResult.hasErrors()){
             return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
         }
 
-        productService.updateProduct(product);
+        shoppingCartService.addProductToCart(product);
         return ResponseEntity.ok("Product added successfully.");
     }
 
-   // PUT	/carts/{cartId}/checkout	Checkout the shopping cart (changes status to CHECKED_OUT).
+
    @PutMapping("/checkout/{}")
-   public ResponseEntity<?> editProduct(@PathVariable Long id)
-   {
-       productService.updateProduct(product);
-       return ResponseEntity.ok("Cart cheked-out successfully, you can proceed to the sale!");
+   public ResponseEntity<?> editProduct(@PathVariable Long id) {
+       shoppingCartService.checkoutCart(id);
+       return ResponseEntity.ok("Cart checked-out successfully, you can proceed to the sale!");
    }
 
 
-    //Remove a product from the shopping cart. productId
-    @DeleteMapping("/remove-product/{id}")
-    public ResponseEntity<String> deleteProduct(@PathVariable Long id)
-    {
-        productService.deleteProductById(id);
+    @DeleteMapping("/remove-product")
+    public ResponseEntity<String> deleteProduct(@RequestParam Long cartId, @RequestParam Long productId) {
+        shoppingCartService.deleteCartProductById(cartId, productId);
         return ResponseEntity.ok("Product deleted successfully.");
     }
 
-    //Delete a shopping cart (e.g., if the user abandons it).
+
     @DeleteMapping("/remove-cart/{id}")
-    public ResponseEntity<String> deleteProduct(@PathVariable Long id)
-    {
-        productService.deleteProductById(id);
-        return ResponseEntity.ok("Product deleted successfully.");
+    public ResponseEntity<String> deleteCart(@PathVariable Long id) {
+        shoppingCartService.deleteCartById(id);
+        return ResponseEntity.ok("Cart deleted successfully.");
     }
 
-    */
+
 
 }

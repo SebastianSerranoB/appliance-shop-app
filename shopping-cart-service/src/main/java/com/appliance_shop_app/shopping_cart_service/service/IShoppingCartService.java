@@ -10,7 +10,7 @@ public interface IShoppingCartService {
 
     public List<ShoppingCartResponseDTO> getAllCarts();
 
-    public ShoppingCartResponseDTO findCartById(Long id);
+    public ShoppingCartResponseDTO findCartByIdResponse(Long id);
 
     public Long createCartAndGetId();
 

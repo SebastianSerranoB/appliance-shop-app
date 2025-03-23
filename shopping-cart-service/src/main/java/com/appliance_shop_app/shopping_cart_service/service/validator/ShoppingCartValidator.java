@@ -43,6 +43,24 @@ public class ShoppingCartValidator {
         }
     }
 
+    public void validateDeleteCart(Long cartId){
+        Optional<ShoppingCart> cartOptional = shoppingCartRepository.findById(cartId);
+
+        if(cartOptional.isEmpty()){
+            throw new NotFoundException("Cart with ID: " + cartId + " not found.");
+        }
+
+        ShoppingCart cart = cartOptional.get();
+
+        if(cart.getStatus().equals(Status.DELETED)){
+            throw new BusinessException("Cart with ID: " + cartId + " was already deleted.");
+        }
+
+        if(cart.getStatus() != Status.ACTIVE && cart.getStatus() != Status.CHECKED_OUT){
+            throw new BusinessException("Cart with ID: " + cartId + " must be in an ACTIVE or CHECKED_OUT status to be deleted. Current status: " + cart.getStatus());
+        }
+    }
+
     @CircuitBreaker(name = "product-service", fallbackMethod = "fallback")
     @Retry(name = "product-service")
     public void validateProduct(Long productId, String expectedStatus){
@@ -70,7 +88,6 @@ public class ShoppingCartValidator {
     }
 
     public void validateDeleteProduct(Long cartId, Long productId){
-
         this.validateCart(cartId, Status.ACTIVE.toString());
 
         if(!shoppingCartDetailRepository.productExistsInCart(cartId, productId) ){
