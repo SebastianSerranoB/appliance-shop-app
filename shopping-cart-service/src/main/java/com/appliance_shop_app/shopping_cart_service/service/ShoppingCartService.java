@@ -33,7 +33,7 @@ public class ShoppingCartService implements IShoppingCartService {
     private ShoppingCartMapper shoppingCartMapper;
 
     @Autowired
-    private ShoppingCartDetailMapper shoppingCartDetailMapper,
+    private ShoppingCartDetailMapper shoppingCartDetailMapper;
 
     @Autowired
     private IProductAPI productAPI;
@@ -62,25 +62,32 @@ public class ShoppingCartService implements IShoppingCartService {
 
 
 
+    //When a product already exist it add's twice the product
+    //it is because you execute the addquantity method and also the dave method.
     @Override
     public void addProductToCart(AddProductDTO productDTO) {
        this.shoppingCartValidator.validateAddProduct(productDTO.cartId(), productDTO.productId());
-       this.addQuantityToExistingProduct(productDTO);
-       this.shoppingCartDetailRepository.save(this.shoppingCartDetailMapper.toEntity(productDTO));
+       if(!this.addQuantityToExistingProduct(productDTO) ){
+           this.shoppingCartDetailRepository.save(this.shoppingCartDetailMapper.toEntity(productDTO));
+       }
+
        this.calculateCartFullPrice(productDTO.cartId());
     }
 
-    private void addQuantityToExistingProduct(AddProductDTO productDTO) {
+
+    private Boolean addQuantityToExistingProduct(AddProductDTO productDTO) {
         List<ShoppingCartDetail> detailList = this.shoppingCartDetailRepository.findShoppingCartDetailListById(productDTO.cartId());
         if(!detailList.isEmpty()){
             for(ShoppingCartDetail detail :detailList){
                 if(detail.getProductId().equals(productDTO.productId()) ){
                     detail.setQuantity(detail.getQuantity() + productDTO.quantity());
                     this.shoppingCartDetailRepository.save(detail);
-                    break;
+                    return true;
                 }
             }
         }
+
+        return false;
     }
 
     @Override
@@ -137,7 +144,7 @@ public class ShoppingCartService implements IShoppingCartService {
             }
         }
 
-        ShoppingCart cart =  this.shoppingCartRepository.findById(id);
+        ShoppingCart cart =  this.findCartById(cartId);
         cart.setFullPrice(acumulatePrice);
         this.shoppingCartRepository.save(cart);
     }

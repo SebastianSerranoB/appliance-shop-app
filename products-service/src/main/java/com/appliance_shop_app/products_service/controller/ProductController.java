@@ -46,8 +46,7 @@ public class ProductController {
 
 
     @PutMapping("/update")
-    public ResponseEntity<?> editProduct(@Valid @RequestBody ModifyProductDTO product, BindingResult bindingResult)
-    {
+    public ResponseEntity<?> editProduct(@Valid @RequestBody ModifyProductDTO product, BindingResult bindingResult) {
         if(bindingResult.hasErrors()){
             return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
         }
@@ -56,9 +55,8 @@ public class ProductController {
         return ResponseEntity.ok("Product modified successfully.");
     }
 
-    @DeleteMapping("/product/delete/{id}")
-    public ResponseEntity<String> deleteProduct(@PathVariable Long id)
-    {
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<String> deleteProduct(@PathVariable Long id) {
         productService.deleteProductById(id);
         return ResponseEntity.ok("Product deleted successfully.");
     }

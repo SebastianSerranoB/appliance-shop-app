@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/cart/")
+@RequestMapping("/cart")
 public class ShoppingCartController {
 
 
@@ -33,10 +33,10 @@ public class ShoppingCartController {
 
     @GetMapping("/findOne/{id}")
     public ResponseEntity<ShoppingCartResponseDTO> findOne(@PathVariable Long id) {
-        return ResponseEntity.ok(shoppingCartService.findCartByIdResponse(id);
+        return ResponseEntity.ok(shoppingCartService.findCartByIdResponse(id));
     }
 
-    //PUT	/carts/{cartId}/products	Add or update a product in the shopping cart.
+
     @PutMapping("/add-product")
     public ResponseEntity<?> editProduct(@Valid @RequestBody AddProductDTO product, BindingResult bindingResult) {
         if(bindingResult.hasErrors()){
@@ -48,7 +48,7 @@ public class ShoppingCartController {
     }
 
 
-   @PutMapping("/checkout/{}")
+   @PutMapping("/checkout/{id}")
    public ResponseEntity<?> editProduct(@PathVariable Long id) {
        shoppingCartService.checkoutCart(id);
        return ResponseEntity.ok("Cart checked-out successfully, you can proceed to the sale!");
