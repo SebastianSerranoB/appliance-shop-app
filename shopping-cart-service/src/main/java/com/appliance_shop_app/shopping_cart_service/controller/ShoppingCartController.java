@@ -49,7 +49,7 @@ public class ShoppingCartController {
 
 
    @PutMapping("/checkout/{id}")
-   public ResponseEntity<?> editProduct(@PathVariable Long id) {
+   public ResponseEntity<String> editProduct(@PathVariable Long id) {
        shoppingCartService.checkoutCart(id);
        return ResponseEntity.ok("Cart checked-out successfully, you can proceed to the sale!");
    }
@@ -66,6 +66,12 @@ public class ShoppingCartController {
     public ResponseEntity<String> deleteCart(@PathVariable Long id) {
         shoppingCartService.deleteCartById(id);
         return ResponseEntity.ok("Cart deleted successfully.");
+    }
+
+    @PutMapping("/update-status")
+    public ResponseEntity<String> updateStatus(@RequestParam Long cartId, @RequestParam String status) {
+        shoppingCartService.updateStatusAfterSale(cartId, status);
+        return ResponseEntity.ok("Cart status updated successfully.");
     }
 
 

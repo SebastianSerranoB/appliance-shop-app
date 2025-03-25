@@ -2,6 +2,7 @@ package com.appliance_shop_app.shopping_cart_service.mapper;
 
 import com.appliance_shop_app.shopping_cart_service.dto.ShoppingCartResponseDTO;
 import com.appliance_shop_app.shopping_cart_service.model.ShoppingCart;
+import com.appliance_shop_app.shopping_cart_service.model.enums.Status;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -18,5 +19,10 @@ public class ShoppingCartMapper {
                 shoppingCart.getStatus(),
                 shoppingCartDetailMapper.detailListToResponseDTO(shoppingCart.getId()));
     }
+
+    public Status stringToStatus(String status){
+        return Status.valueOf(status.toUpperCase());
+    }
+
 
 }

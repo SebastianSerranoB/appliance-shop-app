@@ -6,5 +6,6 @@ public enum Status {
     DELETED,
     PENDING,
     COMPLETED,
-    CHECKED_OUT
+    CHECKED_OUT,
+    CANCELED
 }

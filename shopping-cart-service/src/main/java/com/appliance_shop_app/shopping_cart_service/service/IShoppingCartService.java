@@ -21,4 +21,6 @@ public interface IShoppingCartService {
     public void deleteCartProductById(Long cartId, Long productId);
 
     public void deleteCartById(Long id);
+
+    public void updateStatusAfterSale(Long cartId, String updatedStatus);
 }

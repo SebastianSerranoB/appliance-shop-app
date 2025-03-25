@@ -53,17 +53,12 @@ public class ShoppingCartService implements IShoppingCartService {
 
     @Override
     public Long createCartAndGetId() {
-
         ShoppingCart cart = new ShoppingCart();
         cart.setStatus(Status.ACTIVE);
-
         return shoppingCartRepository.save(cart).getId();
     }
 
 
-
-    //When a product already exist it add's twice the product
-    //it is because you execute the addquantity method and also the dave method.
     @Override
     public void addProductToCart(AddProductDTO productDTO) {
        this.shoppingCartValidator.validateAddProduct(productDTO.cartId(), productDTO.productId());
@@ -95,6 +90,13 @@ public class ShoppingCartService implements IShoppingCartService {
         this.shoppingCartValidator.validateCheckoutCart(id);
         ShoppingCart cart = this.findCartById(id);
         cart.setStatus(Status.CHECKED_OUT);
+        this.shoppingCartRepository.save(cart);
+    }
+
+    public void updateStatusAfterSale(Long cartId, String updatedStatus){
+        this.shoppingCartValidator.validateUpdateStatusAfterSale(cartId, updatedStatus);
+        ShoppingCart cart = this.findCartById(cartId);
+        cart.setStatus(this.shoppingCartMapper.stringToStatus(updatedStatus));
         this.shoppingCartRepository.save(cart);
     }
 

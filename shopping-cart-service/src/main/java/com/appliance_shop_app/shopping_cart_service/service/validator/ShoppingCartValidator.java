@@ -61,6 +61,27 @@ public class ShoppingCartValidator {
         }
     }
 
+    public void validateUpdateStatusAfterSale(Long cartId, String updatedStatus){
+        Optional<ShoppingCart> cartOptional = shoppingCartRepository.findById(cartId);
+
+        if(cartOptional.isEmpty()){
+            throw new NotFoundException("Cart with ID: " + cartId + " not found.");
+        }
+
+        if(!updatedStatus.equals(Status.COMPLETED.toString()) && !updatedStatus.equals(Status.DELETED.toString()) && !updatedStatus.equals(Status.CANCELED.toString())) {
+            throw new BusinessException("New status must be either COMPLETED, DELETED or CANCELED after checked_out. Status provided:  " + updatedStatus);
+        }
+
+        ShoppingCart cart = cartOptional.get();
+        if(cart.getStatus() != Status.CHECKED_OUT  &&  cart.getStatus() != Status.COMPLETED){
+            throw new BusinessException("Cart with ID: " + cartId + " must be in a CHECKED_OUT OR COMPLETED status to be updated after sale. Current status: " + cart.getStatus());
+        }
+
+    }
+
+
+
+
     @CircuitBreaker(name = "product-service", fallbackMethod = "fallback")
     @Retry(name = "product-service")
     public void validateProduct(Long productId, String expectedStatus){
