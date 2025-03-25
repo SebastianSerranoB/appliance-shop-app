@@ -3,10 +3,11 @@ spring:
     name: sales-service
   cloud:
     config:
-      uri: http://localhost:8081 
       fail-fast: true 
       retry:
         initial-interval: 1000
         max-interval: 2000
         multiplier: 1.5
         max-attempts: 3
+  config:
+    import: configserver:http://localhost:8081
