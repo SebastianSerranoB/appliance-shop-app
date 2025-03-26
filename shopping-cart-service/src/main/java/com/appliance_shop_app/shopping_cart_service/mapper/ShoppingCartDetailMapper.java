@@ -69,7 +69,7 @@ public class ShoppingCartDetailMapper {
         return detail;
     }
 
-    public ProductDTO fallback(Long productId, Throwable t) {
+    public ShoppingCartDetail fallback(AddProductDTO productDTO, Throwable t) {
         throw new BusinessException("Products-service is unavailable.");
     }
 

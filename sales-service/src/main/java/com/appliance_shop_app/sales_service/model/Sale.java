@@ -49,7 +49,7 @@ public class Sale {
     private String clientSurname;
 
     @Column(name = "client_identification")
-    private string clientIdentification;
+    private String clientIdentification;
 
 
 

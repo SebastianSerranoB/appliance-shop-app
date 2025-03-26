@@ -96,6 +96,10 @@ public class ShoppingCartValidator {
         }
     }
 
+    public void fallback(Long productId, String expectedStatus, Throwable t) {
+        throw new BusinessException("Products-service is unavailable.");
+    }
+
 
     public void validateAddProduct(Long cartId, Long productId){
         this.validateCart(cartId, Status.ACTIVE.toString());
@@ -103,10 +107,6 @@ public class ShoppingCartValidator {
     }
 
 
-
-    public ProductDTO fallback(Long productId, Throwable t) {
-        throw new BusinessException("Products-service is unavailable.");
-    }
 
     public void validateDeleteProduct(Long cartId, Long productId){
         this.validateCart(cartId, Status.ACTIVE.toString());

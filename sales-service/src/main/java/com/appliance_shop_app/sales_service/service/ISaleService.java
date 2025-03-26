@@ -13,6 +13,6 @@ public interface ISaleService {
 
     public void createSale(CompleteSaleRequestDTO requestDTO);
 
-    public void editSaleStatus(Long cartId, String updatedStatus);
+    public void editSaleStatus(Long saleId, String updatedStatus);
 
 }
