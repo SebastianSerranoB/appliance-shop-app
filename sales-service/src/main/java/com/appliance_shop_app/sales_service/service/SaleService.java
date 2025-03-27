@@ -9,12 +9,16 @@ import com.appliance_shop_app.sales_service.mapper.SaleMapper;
 import com.appliance_shop_app.sales_service.model.Sale;
 import com.appliance_shop_app.sales_service.model.enums.Status;
 import com.appliance_shop_app.sales_service.repository.ISaleRepository;
+import com.appliance_shop_app.sales_service.repository.PaymentMethodUsage;
 import com.appliance_shop_app.sales_service.service.validator.SaleValidator;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.github.resilience4j.retry.annotation.Retry;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -31,6 +35,7 @@ public class SaleService implements ISaleService{
 
     @Autowired
     private ICartAPI cartAPI;
+
 
 
 
@@ -78,6 +83,39 @@ public class SaleService implements ISaleService{
         throw new BusinessException("Cart-service is unavailable");
     }
 
+
+
+    public List<SaleResponseDTO> getTop10SalesBetweenDates(LocalDateTime startDate, LocalDateTime endDate) {
+        List<Sale> results = saleRepository.findTop10SalesBetweenDates(Status.COMPLETED, startDate, endDate, PageRequest.of(0,10));
+
+        if(!results.isEmpty()) {
+            return results.stream().map(sale -> saleMapper.toDTO(sale)).toList();
+        }else{
+            throw new BusinessException("No products sold between the time period.");
+        }
+
+    }
+
+
+    public Double getTotalAccumulatedSales(LocalDateTime startDate, LocalDateTime endDate) {
+        Double value =  saleRepository.findTotalAccumulatedSales(Status.COMPLETED, startDate, endDate);
+        if(value != null){
+            return value;
+        }else{
+            throw new BusinessException("No products sold between the time period.");
+        }
+    }
+
+
+    public List<PaymentMethodUsage> getMostUsedPaymentMethods(LocalDateTime startDate, LocalDateTime endDate) {
+         List<PaymentMethodUsage> results = saleRepository.findMostUsedPaymentMethod(Status.COMPLETED, startDate, endDate);
+        if(!results.isEmpty()) {
+            return results;
+        }else{
+            throw new BusinessException("No products sold between the time period.");
+        }
+
+    }
 
 
 }
