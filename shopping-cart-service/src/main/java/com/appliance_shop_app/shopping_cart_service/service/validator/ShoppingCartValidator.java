@@ -68,7 +68,7 @@ public class ShoppingCartValidator {
             throw new NotFoundException("Cart with ID: " + cartId + " not found.");
         }
 
-        if(!updatedStatus.equals(Status.COMPLETED.toString()) && !updatedStatus.equals(Status.DELETED.toString()) && !updatedStatus.equals(Status.CANCELED.toString())) {
+        if(!updatedStatus.toUpperCase().equals(Status.COMPLETED.toString()) && !updatedStatus.toUpperCase().equals(Status.DELETED.toString()) && !updatedStatus.toUpperCase().equals(Status.CANCELED.toString())) {
             throw new BusinessException("New status must be either COMPLETED, DELETED or CANCELED after checked_out. Status provided:  " + updatedStatus);
         }
 
@@ -81,11 +81,8 @@ public class ShoppingCartValidator {
 
 
 
-
-    @CircuitBreaker(name = "product-service", fallbackMethod = "fallback")
-    @Retry(name = "product-service")
     public void validateProduct(Long productId, String expectedStatus){
-        ProductDTO product = productAPI.getProductById(productId);
+        ProductDTO product = this.fetchProductFromAPI(productId);
 
         if(product == null){
             throw new NotFoundException("Product with ID: " +  productId + " not found.");
@@ -96,9 +93,23 @@ public class ShoppingCartValidator {
         }
     }
 
-    public void fallback(Long productId, String expectedStatus, Throwable t) {
-        throw new BusinessException("Products-service is unavailable.");
+
+    @CircuitBreaker(name = "product-service", fallbackMethod = "fallbackFetchProduct")
+    @Retry(name = "product-service")
+    public ProductDTO fetchProductFromAPI(Long productId){
+        return productAPI.getProductById(productId);
     }
+
+    public ProductDTO fallbackFetchProduct(Long productId, Throwable t) {
+        throw new BusinessException("Products-service is unavailable. Could not fetch product with ID: " + productId);
+    }
+
+
+
+
+
+
+
 
 
     public void validateAddProduct(Long cartId, Long productId){

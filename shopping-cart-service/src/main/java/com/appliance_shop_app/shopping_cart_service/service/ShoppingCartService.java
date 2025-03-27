@@ -3,6 +3,7 @@ package com.appliance_shop_app.shopping_cart_service.service;
 import com.appliance_shop_app.shopping_cart_service.api.IProductAPI;
 import com.appliance_shop_app.shopping_cart_service.dto.AddProductDTO;
 import com.appliance_shop_app.shopping_cart_service.dto.ShoppingCartResponseDTO;
+import com.appliance_shop_app.shopping_cart_service.exception.BusinessException;
 import com.appliance_shop_app.shopping_cart_service.exception.NotFoundException;
 import com.appliance_shop_app.shopping_cart_service.mapper.ShoppingCartDetailMapper;
 import com.appliance_shop_app.shopping_cart_service.mapper.ShoppingCartMapper;
@@ -94,10 +95,15 @@ public class ShoppingCartService implements IShoppingCartService {
     }
 
     public void updateStatusAfterSale(Long cartId, String updatedStatus){
-        this.shoppingCartValidator.validateUpdateStatusAfterSale(cartId, updatedStatus);
-        ShoppingCart cart = this.findCartById(cartId);
-        cart.setStatus(this.shoppingCartMapper.stringToStatus(updatedStatus));
-        this.shoppingCartRepository.save(cart);
+        try {
+            this.shoppingCartValidator.validateUpdateStatusAfterSale(cartId, updatedStatus);
+            ShoppingCart cart = this.findCartById(cartId);
+            Status status = Status.valueOf(updatedStatus.toUpperCase()); // Convert to enum
+            cart.setStatus(status);
+            this.shoppingCartRepository.save(cart);
+        } catch (IllegalArgumentException e) {
+            throw new BusinessException("Invalid status: " + updatedStatus + ". Status must be one of: COMPLETED, DELETED, CANCELED.");
+        }
     }
 
 

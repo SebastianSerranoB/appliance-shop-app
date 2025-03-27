@@ -3,7 +3,6 @@ package com.appliance_shop_app.sales_service.controller;
 
 import com.appliance_shop_app.sales_service.dto.CompleteSaleRequestDTO;
 import com.appliance_shop_app.sales_service.dto.SaleResponseDTO;
-import com.appliance_shop_app.sales_service.repository.PaymentMethodUsage;
 import com.appliance_shop_app.sales_service.service.ISaleService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,17 +58,16 @@ public class SaleController {
     }
 
     @GetMapping("/mostUsedPaymentMethods")
-    public ResponseEntity<List<PaymentMethodUsage>> mostUsedPaymentMethods(@RequestParam LocalDateTime startDate, @RequestParam LocalDateTime endDate){
-        return ResponseEntity.ok(this.saleService.getMostUsedPaymentMethods(startDate, endDate));
+    public ResponseEntity<String> mostUsedPaymentMethods(@RequestParam LocalDateTime startDate, @RequestParam LocalDateTime endDate){
+        return ResponseEntity.ok(this.saleService.getMostUsedPaymentMethod(startDate, endDate));
     }
+
 
     @GetMapping("/accumulatedSalesValue")
     public ResponseEntity<String> accumulatedSalesValue(@RequestParam LocalDateTime startDate, @RequestParam LocalDateTime endDate){
 
         return ResponseEntity.ok("The total value accumulated between the dates was: " + this.saleService.getTotalAccumulatedSales(startDate, endDate));
     }
-
-
 
 
 }

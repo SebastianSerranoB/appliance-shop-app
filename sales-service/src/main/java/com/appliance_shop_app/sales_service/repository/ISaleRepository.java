@@ -24,12 +24,15 @@ public interface ISaleRepository extends JpaRepository<Sale, Long> {
 
 
 
+
+
     @Query("SELECT s.paymentMethod, COUNT(s) FROM Sale s " +
             "WHERE s.status = :status AND s.date BETWEEN :startDate AND :endDate " +
             "GROUP BY s.paymentMethod ORDER BY COUNT(s) DESC")
-    List<PaymentMethodUsage> findMostUsedPaymentMethod(@Param("status") Status status,
-                                                       @Param("startDate") LocalDateTime startDate,
-                                                       @Param("endDate") LocalDateTime endDate);
+    List<Object[]> findMostUsedPaymentMethod(@Param("status") Status status,
+                                       @Param("startDate") LocalDateTime startDate,
+                                       @Param("endDate") LocalDateTime endDate);
+
 
 
 

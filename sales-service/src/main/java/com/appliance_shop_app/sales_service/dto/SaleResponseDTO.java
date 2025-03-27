@@ -6,6 +6,7 @@ import com.appliance_shop_app.sales_service.model.enums.Status;
 import java.time.LocalDateTime;
 
 public record SaleResponseDTO(
+        Long saleId,
         String clientName,
         String clientIdentification,
         LocalDateTime dateTime,

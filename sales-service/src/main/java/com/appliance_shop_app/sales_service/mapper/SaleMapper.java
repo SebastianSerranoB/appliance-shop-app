@@ -42,6 +42,7 @@ public class SaleMapper {
     public SaleResponseDTO toDTO(Sale sale){
 
         SaleResponseDTO saleDTO = new SaleResponseDTO(
+                sale.getId(),
                 sale.getClientName() + " " + sale.getClientSurname(),
                 sale.getClientIdentification(),
                 sale.getDate(),
@@ -55,7 +56,6 @@ public class SaleMapper {
     }
 
 
-
     @CircuitBreaker(name = "cart-service", fallbackMethod = "fallbackGetCart")
     @Retry(name = "cart-service")
     public CartResponseDTO getCart(Long cartId){
@@ -65,11 +65,6 @@ public class SaleMapper {
     public CartResponseDTO fallbackGetCart(Long cartId, Throwable t){
         throw new BusinessException("Cart-service is unavailable.");
     }
-
-
-
-
-
 
 
 

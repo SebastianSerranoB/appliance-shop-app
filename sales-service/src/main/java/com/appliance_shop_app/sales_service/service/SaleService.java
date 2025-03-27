@@ -9,13 +9,11 @@ import com.appliance_shop_app.sales_service.mapper.SaleMapper;
 import com.appliance_shop_app.sales_service.model.Sale;
 import com.appliance_shop_app.sales_service.model.enums.Status;
 import com.appliance_shop_app.sales_service.repository.ISaleRepository;
-import com.appliance_shop_app.sales_service.repository.PaymentMethodUsage;
 import com.appliance_shop_app.sales_service.service.validator.SaleValidator;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.github.resilience4j.retry.annotation.Retry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -41,9 +39,16 @@ public class SaleService implements ISaleService{
 
     @Override
     public List<SaleResponseDTO> getAllSales() {
-        return this.saleRepository.findAll()
-                            .stream()
-                            .map(sale -> saleMapper.toDTO(sale)).toList();
+
+        List<Sale> results = this.saleRepository.findAll();
+        if(results.isEmpty()){
+            throw new BusinessException("No sales exist between the time period.");
+        }else{
+            return this.saleRepository.findAll()
+                    .stream()
+                    .map(sale -> saleMapper.toDTO(sale)).toList();
+        }
+
     }
 
     @Override
@@ -68,18 +73,18 @@ public class SaleService implements ISaleService{
         Sale sale = this.getSale(saleId);
         sale.setStatus(Status.valueOf(updatedStatus.toUpperCase()));
         this.saleRepository.save(sale);
-        this.updateCartStatus(sale.getCartId(), updatedStatus.toUpperCase());
+        this.updateCartStatus(sale.getCartId(), updatedStatus);
     }
 
 
 
-    @CircuitBreaker(name = "cart-service", fallbackMethod = "fallback")
+    @CircuitBreaker(name = "cart-service", fallbackMethod = "fallbackUpdateStatus")
     @Retry(name = "cart-service")
     public void updateCartStatus(Long cartId, String updatedStatus){
-        this.cartAPI.updateStatusAfterSale(cartId, updatedStatus.toUpperCase());
+        this.cartAPI.updateStatusAfterSale(cartId, updatedStatus);
     }
 
-    public void fallback(Long cartId, String updatedStatus, Throwable t){
+    public void fallbackUpdateStatus(Long cartId, String updatedStatus, Throwable t){
         throw new BusinessException("Cart-service is unavailable");
     }
 
@@ -91,7 +96,7 @@ public class SaleService implements ISaleService{
         if(!results.isEmpty()) {
             return results.stream().map(sale -> saleMapper.toDTO(sale)).toList();
         }else{
-            throw new BusinessException("No products sold between the time period.");
+            throw new BusinessException("No sales exist between the time period.");
         }
 
     }
@@ -102,20 +107,24 @@ public class SaleService implements ISaleService{
         if(value != null){
             return value;
         }else{
-            throw new BusinessException("No products sold between the time period.");
+            throw new BusinessException("No sales exist between the time period.");
         }
     }
 
 
-    public List<PaymentMethodUsage> getMostUsedPaymentMethods(LocalDateTime startDate, LocalDateTime endDate) {
-         List<PaymentMethodUsage> results = saleRepository.findMostUsedPaymentMethod(Status.COMPLETED, startDate, endDate);
-        if(!results.isEmpty()) {
-            return results;
-        }else{
-            throw new BusinessException("No products sold between the time period.");
+
+    public String getMostUsedPaymentMethod(LocalDateTime startDate, LocalDateTime endDate) {
+        List<Object[]> results = saleRepository.findMostUsedPaymentMethod(Status.COMPLETED, startDate, endDate);
+
+        if (results != null && !results.isEmpty()) {
+            Object[] result = results.getFirst();
+            String paymentMethod = result[0].toString();
+            Long count = (Long) result[1];
+
+            return "The most used payment method was " + paymentMethod + " and it was used " + count + " times.";
+        } else {
+            throw new BusinessException("No sales found between the given dates.");
         }
-
     }
-
 
 }

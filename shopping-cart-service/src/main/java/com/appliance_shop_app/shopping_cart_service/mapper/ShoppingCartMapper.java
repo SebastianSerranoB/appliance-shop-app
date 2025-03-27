@@ -20,9 +20,5 @@ public class ShoppingCartMapper {
                 shoppingCartDetailMapper.detailListToResponseDTO(shoppingCart.getId()));
     }
 
-    public Status stringToStatus(String status){
-        return Status.valueOf(status.toUpperCase());
-    }
-
 
 }

@@ -22,29 +22,40 @@ public class SaleValidator {
     private ISaleRepository saleRepository;
 
 
+    public void validateCreateSale(CompleteSaleRequestDTO saleRequestDTO) {
+        CartResponseDTO cartDTO = fetchCartFromAPI(saleRequestDTO.cartId());
+        validateCartStatus(cartDTO, saleRequestDTO.cartId());
+    }
 
     @CircuitBreaker(name = "cart-service", fallbackMethod = "fallback")
     @Retry(name = "cart-service")
-    public void validateCreateSale(CompleteSaleRequestDTO saleRequestDTO){
-        CartResponseDTO cartDTO = this.cartAPI.findCartById(saleRequestDTO.cartId());
-
-        if(cartDTO == null){
-            throw new NotFoundException("Cart with ID: " + saleRequestDTO.cartId() + " not found.");
-        }
-
-        if(!cartDTO.status().equals(Status.CHECKED_OUT)){
-            throw new BusinessException("Cart with ID: " + saleRequestDTO.cartId() + " must have a CHECKED_OUT status. Current status: " + cartDTO.status());
-        }
-
+    public CartResponseDTO fetchCartFromAPI(Long cartId) {
+        return cartAPI.findCartById(cartId);
     }
 
-    public void fallback(CompleteSaleRequestDTO saleRequestDTO, Throwable t){
+    public CartResponseDTO fallback(Long cartId, Throwable t){
         throw new BusinessException("Cart-service is unavailable.");
     }
 
 
+    public void validateCartStatus(CartResponseDTO cartDTO, Long cartId) {
+        if (cartDTO == null) {
+            throw new NotFoundException("Cart with ID: " + cartId + " not found.");
+        }
+
+        if (cartDTO.status().equals(Status.DELETED)) {
+            throw new BusinessException("Cart with ID: " + cartId + " has been deleted and cannot be processed.");
+        }
+
+        if (!cartDTO.status().equals(Status.CHECKED_OUT)) {
+            throw new BusinessException("Cart with ID: " + cartId + " must have a CHECKED_OUT status. Current status: " + cartDTO.status());
+        }
+    }
+
+
+
     public void validateSale(Long saleId){
-        this.saleRepository.findById(cartId).orElseThrow(
+        this.saleRepository.findById(saleId).orElseThrow(
                                                             () -> new NotFoundException("Sale with ID: " + saleId + " not found."));
     }
 

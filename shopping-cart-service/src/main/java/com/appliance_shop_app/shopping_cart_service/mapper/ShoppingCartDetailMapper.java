@@ -70,7 +70,7 @@ public class ShoppingCartDetailMapper {
     }
 
     public ShoppingCartDetail fallback(AddProductDTO productDTO, Throwable t) {
-        throw new BusinessException("Products-service is unavailable.");
+        throw new BusinessException("Products-service is unavailable. Couldn't fetch product with ID: " + productDTO.productId());
     }
 
 
