@@ -63,68 +63,51 @@ Before setting up the application, ensure you have the following installed:
 
 1) **Clone the Repositories**:
 
-   bash
-   git clone https://github.com/SebastianSerranoB/appliance-shop-app.git
-   git clone https://github.com/SebastianSerranoB/appliance-shop-config-server.git
+      git clone https://github.com/SebastianSerranoB/appliance-shop-app.git
+      git clone https://github.com/SebastianSerranoB/appliance-shop-config-server.git
 
 2) **Database Setup:**
 
-Launch XAMPP and start the MYSQL service.
-
-Create the necessary databases for each microservice:
-product_service_db
-sales_service_db
-shopping_cart_service_db
-
-Import the SQL scripts located in the db-schema directory of each microservice to set up the database schema and initial data.
+      Launch XAMPP and start the MYSQL service.
+      
+      Create the necessary databases for each microservice:
+      product_service_db
+      sales_service_db
+      shopping_cart_service_db
+      
+      Import the SQL scripts located in the db-schema directory of each microservice to set up the database schema and initial data.
 
 3) **Configure Environment Variables:**
 
-Set up the following environment variables to match your local setup:
-
-DB_HOST: Database host (e.g., localhost).
-
-DB_PORT: Database port (default is 3306).
-
-DB_USERNAME: Your MySQL username.
-
-DB_PASSWORD: Your MySQL password.
+      Set up the following environment variables to match your local setup:
+      
+      DB_HOST: Database host (e.g., localhost).
+      
+      DB_PORT: Database port (default is 3306).
+      
+      DB_USERNAME: Your MySQL username.
+      
+      DB_PASSWORD: Your MySQL password.
 
 4) **Start the Config Server:**
 
-Navigate to the appliance-shop-config-server directory and run:
-
-bash
-Copy
-Edit
-./mvnw spring-boot:run
+      Navigate to the appliance-shop-config-server directory and run:
+      ./mvnw spring-boot:run
 
 5) **Start the Eureka Server:**
 
-Navigate to the eureka-sv directory within appliance-shop-app and run:
-
-bash
-Copy
-Edit
-./mvnw spring-boot:run
+      Navigate to the eureka-sv directory within appliance-shop-app and run:
+      ./mvnw spring-boot:run
 
 6) **Start the Microservices:**
 
-For each microservice (product-service, sales-service, shopping-cart-service), navigate to its directory and run:
-
-bash
-Copy
-Edit
-./mvnw spring-boot:run
+      For each microservice (product-service, sales-service, shopping-cart-service), navigate to its directory and run:
+      ./mvnw spring-boot:run
 
 7) **Start the API Gateway:**
 
-Navigate to the api-gateway directory and run:
-
-bash
-Copy
-Edit
-./mvnw spring-boot:run
+      Navigate to the api-gateway directory and run:
+      ./mvnw spring-boot:run
 
 
 ## Testing
