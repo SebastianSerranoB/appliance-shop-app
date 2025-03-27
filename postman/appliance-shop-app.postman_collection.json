@@ -1,0 +1,499 @@
+{
+	"info": {
+		"_postman_id": "89c8a0c5-99ab-4541-a543-19912377729b",
+		"name": "appliance-shop-app",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "34150638"
+	},
+	"item": [
+		{
+			"name": "product-service",
+			"item": [
+				{
+					"name": "getAll",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/PRODUCTS-SERVICE/product/getAll",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"PRODUCTS-SERVICE",
+								"product",
+								"getAll"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "findOne",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/products-service/product/findOne/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"products-service",
+								"product",
+								"findOne",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/products-service/product/delete/10",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"products-service",
+								"product",
+								"delete",
+								"10"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"washing-machine\",\r\n    \"brand\": \"LG\",\r\n    \"price\": 700\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/products-service/product/create",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"products-service",
+								"product",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n   \"id\": 1,\r\n   \"name\": \"microwave\",\r\n   \"brand\": \"philips\",\r\n   \"price\": 220,\r\n   \"status\": \"ACTIVE\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/products-service/product/update",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"products-service",
+								"product",
+								"update"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "cart-service",
+			"item": [
+				{
+					"name": "create",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/shopping-cart-service/cart/createAndGetID",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"shopping-cart-service",
+								"cart",
+								"createAndGetID"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getAllCarts",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/shopping-cart-service/cart/getAllCartsAndDetails",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"shopping-cart-service",
+								"cart",
+								"getAllCartsAndDetails"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "findOneCart",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/shopping-cart-service/cart/findOne/1",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"shopping-cart-service",
+								"cart",
+								"findOne",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteCart",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/shopping-cart-service/cart/remove-cart/2",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"shopping-cart-service",
+								"cart",
+								"remove-cart",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete-product",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/shopping-cart-service/cart/remove-product?cartId=2&productId=1",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"shopping-cart-service",
+								"cart",
+								"remove-product"
+							],
+							"query": [
+								{
+									"key": "cartId",
+									"value": "2"
+								},
+								{
+									"key": "productId",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "checkoutCart",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/shopping-cart-service/cart/checkout/3",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"shopping-cart-service",
+								"cart",
+								"checkout",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add-product-to-cart",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"productId\": 3,\r\n    \"quantity\": 1,\r\n    \"cartId\": 5\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/shopping-cart-service/cart/add-product",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"shopping-cart-service",
+								"cart",
+								"add-product"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "sales-service",
+			"item": [
+				{
+					"name": "getAll",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/sales-service/sale/getAllSales",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"sales-service",
+								"sale",
+								"getAllSales"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "topSales",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/sales-service/sale/topSales?startDate=2025-03-01T10:15:30&endDate=2025-04-01T10:15:30",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"sales-service",
+								"sale",
+								"topSales"
+							],
+							"query": [
+								{
+									"key": "startDate",
+									"value": "2025-03-01T10:15:30"
+								},
+								{
+									"key": "endDate",
+									"value": "2025-04-01T10:15:30"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "mostUsedPaymentMethods",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/sales-service/sale/mostUsedPaymentMethods?startDate=2025-03-01T10:15:30&endDate=2025-04-01T10:15:30",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"sales-service",
+								"sale",
+								"mostUsedPaymentMethods"
+							],
+							"query": [
+								{
+									"key": "startDate",
+									"value": "2025-03-01T10:15:30"
+								},
+								{
+									"key": "endDate",
+									"value": "2025-04-01T10:15:30"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "accumulatedSalesValue",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/sales-service/sale/accumulatedSalesValue?startDate=2025-03-01T10:15:30&endDate=2025-04-01T10:15:30",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"sales-service",
+								"sale",
+								"accumulatedSalesValue"
+							],
+							"query": [
+								{
+									"key": "startDate",
+									"value": "2025-03-01T10:15:30"
+								},
+								{
+									"key": "endDate",
+									"value": "2025-04-01T10:15:30"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "findOne",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/sales-service/sale/findOne/1",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"sales-service",
+								"sale",
+								"findOne",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updateStatus",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/sales-service/sale/update-status?saleId=2&status=CANCELED",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"sales-service",
+								"sale",
+								"update-status"
+							],
+							"query": [
+								{
+									"key": "saleId",
+									"value": "2"
+								},
+								{
+									"key": "status",
+									"value": "CANCELED"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "completeSale",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"cartId\": 8,\r\n    \"paymentMethod\": \"CASH\",\r\n    \"clientName\": \"Paul\",\r\n    \"clientSurname\": \"Mccartney\",\r\n    \"clientIdentification\": \"12345678\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/sales-service/sale/completeSale",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"sales-service",
+								"sale",
+								"completeSale"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
